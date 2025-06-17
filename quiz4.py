@@ -1,48 +1,50 @@
 import requests
-import json
 
-def get_joke():
-    """從 JokeAPI 獲取笑話"""
-    url = "https://v2.jokeapi.dev/joke/Any"
+API_URL = "http://localhost:9000"
+
+USERNAME = "alice"
+PASSWORD = "123"
+
+# 任務六 使用 GET 方法取得問題
+def get_questions():
+    response = requests.get(f"{API_URL}/questions", auth=(USERNAME, PASSWORD))
+    if response.status_code == 200:
+        print(response.json())
+        return response.json()
+    else:
+        return None
+
+# 任務七 使用 GET 方法取得各問題
+def get_question(question_id):
+    response = requests.get(f"{API_URL}/questions/{question_id}", auth=(USERNAME, PASSWORD))
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
     
-    try:
-        # 發送 GET 請求
-        response = requests.get(url)
-        
-        # 檢查請求是否成功
-        if response.status_code == 200:
-            joke_data = response.json()
-            
-            # 檢查笑話類型
-            if joke_data['type'] == 'single':
-                # 單行笑話
-                print(f"笑話: {joke_data['joke']}")
-            elif joke_data['type'] == 'twopart':
-                # 兩段式笑話
-                print(f"問題: {joke_data['setup']}")
-                print(f"答案: {joke_data['delivery']}")
-            
-            print(f"分類: {joke_data['category']}")
-            print("-" * 50)
-            
-        else:
-            print(f"請求失敗，狀態碼: {response.status_code}")
-            
-    except requests.exceptions.RequestException as e:
-        print(f"網路請求錯誤: {e}")
-    except json.JSONDecodeError as e:
-        print(f"JSON 解析錯誤: {e}")
-    except KeyError as e:
-        print(f"資料格式錯誤: {e}") 
-
+    
+# 任務八 使用 POST 方法提交答案
+def submit_answer(question_id, answer):
+    response = requests.post(
+        f"{API_URL}/questions/{question_id}",
+        auth=(USERNAME, PASSWORD),
+        json={"answer": answer}
+    )
+    if response.status_code == 200:
+        return response.json()
+    elif response.status_code == 400:
+        print("提交的答案格式錯誤或答案不正確。")
+        return None
+    else:
+        return None
+    
 if __name__ == "__main__":
-    print("=== JokeAPI 笑話產生器 ===")
+    get_questions()
+    question_id = 1  # 假設我們要取得問題 ID 為 1 的問題
+    question = get_question(question_id)
+    print("問題:", question['question'])
     
-    while True:
-        choice = input("\n按 Enter 獲取笑話，輸入 'q' 退出: ")
-        
-        if choice.lower() == 'q':
-            print("再見！")
-            break
-        
-        get_joke()
+    answer = input("請輸入你的答案: ")
+    result = submit_answer(question_id, answer)
+    if result:
+        print("提交結果:", result)
