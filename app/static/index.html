@@ -2,33 +2,167 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>即時註冊大廳</title>
+  <title>即時註冊大廳 - 泡泡效果</title>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/floating.js@1.1.0/dist/floating.min.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 2rem; }
-    #users { list-style: none; padding: 0; }
-    #users li { padding: .5rem; border-bottom: 1px solid #ddd; }
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 2rem;
+    }
+    /* 步驟 2: 設定泡泡容器的樣式 */
+    #bubble-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden; /* 確保泡泡不會跑出畫面 */
+      z-index: -1; /* 讓容器在最底層，不影響其他內容 */
+    }
+    /* 步驟 2: 設定泡泡的樣式 */
+    .bubble {
+      opacity: 1;
+      filter: brightness(1);
+      position: absolute; /* 這是 floating.js 運作的關鍵 */
+      background-color: rgba(0, 150, 255, 0.8);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 50%; /* 圓形泡泡 */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      /* 讓泡泡大小隨機，看起來更自然 */
+      transform: scale(0); /* 初始大小為0，用於進場動畫 */
+      animation: pop-in 0.5s forwards ease-out;
+      transition: opacity 0.1s ease-out, filter 0.1s ease-out;
+    }
+
+    /* 簡單的進場動畫 */
+    @keyframes pop-in {
+      to {
+        transform: scale(1);
+      }
+    }
+
+    /* 漸變消失動畫 */
+    @keyframes fade-out {
+      to {
+        opacity: 0;
+        transform: scale(0.8);
+        filter: brightness(0.3);
+      }
+    }
   </style>
 </head>
 <body>
   <h1>新註冊使用者</h1>
-  <ul id="users"></ul>
+  <ul id="users" style="display: none;"></ul>
+
+  <div id="bubble-container"></div>
 
   <script>
-    // 連線到後端 lobby namespace
+    // 連線到後端
     const socket = io('http://localhost:9000/');
+    const bubbleContainer = document.getElementById('bubble-container');
 
     socket.on('connect', () => {
-      console.log('已連線到 SocketIO');
+      console.log('已連線到 Socket.IO');
     });
 
-    // 當有 new_user 事件時，把 username 加到清單
+    // 創建泡泡的函數
+    function createBubble(username) {
+      console.log(`新使用者加入: ${username}`);
+
+      // 步驟 3: 動態建立泡泡並啟動效果
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      bubble.textContent = username;
+
+      // 讓泡泡的初始位置和大小有點隨機性
+      const randomSize = Math.random() * 40 + 80; // 80px ~ 120px
+      bubble.style.width = `${randomSize}px`;
+      bubble.style.height = `${randomSize}px`;
+      
+      // 設定隨機初始位置
+      const containerWidth = bubbleContainer.offsetWidth;
+      const containerHeight = bubbleContainer.offsetHeight;
+      const randomX = Math.random() * (containerWidth - randomSize);
+      const randomY = Math.random() * (containerHeight - randomSize);
+      
+      bubble.style.left = `${randomX}px`;
+      bubble.style.top = `${randomY}px`;
+
+      bubble.style.animation = 
+      `pop-in 0.5s forwards ease-out, fade-out 9s forwards ease-out 3s`; // 先進場，然後在3秒後開始漸變消失
+
+      // 將泡泡加到容器中
+      bubbleContainer.appendChild(bubble);
+
+      // 啟動漂浮效果！
+      floating({
+        el: bubble,
+        container: bubbleContainer,
+        options: {
+          size: randomSize, // 泡泡的碰撞偵測大小
+          speed: Math.random() * 0.5 + 0.3, // 隨機速度
+        }
+      });
+      
+      // 漸變效果：隨時間變暗和透明
+      const totalLifetime = 12000; // 總生命週期 12 秒
+      const fadeStartTime = 3000;  // 3 秒後開始漸變
+      
+      // 開始漸變效果
+      setTimeout(() => {
+        const fadeInterval = setInterval(() => {
+          const currentOpacity = parseFloat(bubble.style.opacity) || 1;
+          const currentBrightness = parseFloat(bubble.style.filter?.match(/brightness\(([^)]+)\)/)?.[1]) || 1;
+          
+          // 逐漸降低透明度和亮度
+          const newOpacity = Math.max(0, currentOpacity - 0.02);
+          const newBrightness = Math.max(0.3, currentBrightness - 0.015);
+          
+          bubble.style.opacity = newOpacity;
+          bubble.style.filter = `brightness(${newBrightness})`;
+          
+          // 當完全透明時清除間隔並移除元素
+          if (newOpacity <= 0) {
+            clearInterval(fadeInterval);
+            bubble.remove();
+          }
+        }, 100); // 每 100ms 更新一次
+        
+      }, fadeStartTime);
+      
+      // 保險措施：確保泡泡最終會被移除
+      setTimeout(() => {
+        if (bubble.parentNode) {
+          bubble.remove();
+        }
+      }, totalLifetime);
+    }
+
+    // 監聽來自後端的新使用者事件
     socket.on('new_user', data => {
-      const ul = document.getElementById('users');
-      const li = document.createElement('li');
-      li.textContent = data.username;
-      ul.appendChild(li);
+      createBubble(data.username);
     });
+    
+    // --- 以下為測試用，直接在前端創建泡泡 ---
+    // 如果後端無法正常工作，可以用這個測試
+    let testUserId = 1;
+    setInterval(() => {
+      createBubble(`TestUser${testUserId++}`);
+    }, 200); // 每 200 毫秒模擬一位新使用者
+    // --- 測試用程式碼結束 ---
   </script>
 </body>
 </html>
