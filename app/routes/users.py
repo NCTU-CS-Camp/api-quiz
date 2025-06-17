@@ -74,4 +74,14 @@ def manage_user():
             app.logger.error(f"Account deletion failed for {user.username}: {str(e)}")
             return jsonify({'error': '刪除失敗', 'message': str(e)}), 500
 
-    
+
+@users_bp.route('/users/count', methods=['GET'])
+def total_users():
+    """回傳目前 User table 的總筆數"""
+    try:
+        count = User.query.count()
+        app.logger.debug(f"Total users: {count}")
+        return jsonify({'count': count}), 200
+    except Exception as e:
+        app.logger.error(f"Failed to count users: {e}")
+        return jsonify({'error': '查詢失敗', 'message': str(e)}), 500

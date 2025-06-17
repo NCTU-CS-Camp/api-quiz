@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from .config     import Config
 from .extensions import db, auth, socketio
 import app.auth # 初始化 auth 
@@ -9,6 +10,7 @@ from .routes.users     import users_bp
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    CORS(app)
 
     # init extensions
     setup_logger(app)
