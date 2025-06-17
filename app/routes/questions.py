@@ -12,7 +12,7 @@ def list_questions():
 @auth.login_required
 def get_question(id):
     try:
-        text = open(f'questions/Q{id}.txt','r',encoding='utf-8').read()
+        text = open(f'{app.root_path}/questions/Q{id}.txt','r',encoding='utf-8').read()
         return jsonify({'id': id, 'question': text}), 200
     except FileNotFoundError:
         return jsonify({'error':'問題不存在'}), 404
@@ -30,7 +30,7 @@ def answer_question(id):
         return jsonify({'error':'請提供答案'}), 400
     
     try:
-        with open(f'questions/Ans{id}.txt', 'r', encoding='utf-8') as f:
+        with open(f'{app.root_path}/questions/Ans{id}.txt', 'r', encoding='utf-8') as f:
             correct_answer = f.read().strip()
         app.logger.debug(f"Loaded correct answer for question {id}")
     except FileNotFoundError:
