@@ -19,7 +19,7 @@ def setup_logger(app):
     # 控制台 handler
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
-    console_handler.setLevel(logging.DEBUG)
+    console_handler.setLevel(logging.WARNING)
     
     # 設定 app logger
     app.logger.setLevel(logging.DEBUG)

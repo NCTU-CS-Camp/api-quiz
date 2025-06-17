@@ -17,6 +17,11 @@ def create_app():
     db.init_app(app)
     socketio.init_app(app)
     
+    # 當用戶訪問 '/'，直接回傳 static/index.html
+    @app.route('/')
+    def index():
+        return app.send_static_file('index.html')
+    
     @app.before_request
     def log_request_info():
         """記錄請求資訊"""
