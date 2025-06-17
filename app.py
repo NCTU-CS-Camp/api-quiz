@@ -72,7 +72,8 @@ class User(db.Model):
     id            = db.Column(db.Integer, primary_key=True)
     username      = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    iq            = db.Column(db.Integer, nullable=True, default=0)
+    team          = db.Column(db.Integer, default=0)
+    iq         = db.Column(db.Integer, default=0)
 
     def set_password(self, pw):
         self.password_hash = generate_password_hash(pw)
@@ -84,8 +85,13 @@ class User(db.Model):
         return result
 
     def to_dict(self):
-        return {'id': self.id, 'username': self.username, 'iq': self.iq}
-
+        return {
+            'id': self.id,
+            'username': self.username,
+            'team': self.team,
+            'iq': self.iq,
+        }
+        
 # ===== HTTP Basic Auth =====
 @auth.verify_password
 def verify_password(username, password):
@@ -228,51 +234,7 @@ def answer_question(id):
         return jsonify({'error': '回答錯誤', 'message': '答案不正確，請再試一次'}), 400
 
 # ===== Admin Endpoints =====
-@app.route('/admin/users', methods=['GET'])
-@auth.login_required
-def get_all_users():
-    user = get_current_user_safe()
-    app.logger.info(f"User {user.username if user else 'Unknown'} requested all users")
-    
-    if not user or user.username != 'admin':
-        app.logger.warning(f"Non-admin user {user.username if user else 'Unknown'} tried to access admin endpoint")
-        return jsonify({'error': '權限不足', 'message': '只有管理員可以執行此操作'}), 403
-    
-    users = User.query.all()
-    app.logger.info(f"Admin retrieved {len(users)} users")
-    return jsonify({'users': [user.to_dict() for user in users]}), 200
 
-@app.route('/admin/users/<int:user_id>', methods=['DELETE'])
-@auth.login_required
-def delete_user(user_id):
-    current_user = get_current_user_safe()
-    app.logger.info(f"User {current_user.username if current_user else 'Unknown'} attempting to delete user {user_id}")
-    
-    if not current_user or current_user.username != 'admin':
-        app.logger.warning(f"Non-admin user {current_user.username if current_user else 'Unknown'} tried to delete user")
-        return jsonify({'error': '權限不足', 'message': '只有管理員可以執行此操作'}), 403
-    
-    user_to_delete = User.query.get(user_id)
-    if not user_to_delete:
-        app.logger.warning(f"Admin tried to delete non-existent user {user_id}")
-        return jsonify({'error': '用戶不存在', 'message': f'找不到 ID 為 {user_id} 的用戶'}), 404
-    
-    if user_to_delete.username == 'admin':
-        app.logger.warning("Admin tried to delete admin account")
-        return jsonify({'error': '操作不允許', 'message': '不能刪除管理員帳號'}), 400
-    
-    try:
-        username = user_to_delete.username
-        db.session.delete(user_to_delete)
-        db.session.commit()
-        app.logger.info(f"Admin successfully deleted user: {username}")
-        return jsonify({'message': f'用戶 {username} 已被刪除'}), 200
-    except Exception as e:
-        db.session.rollback()
-        app.logger.error(f"Error deleting user {user_id}: {str(e)}")
-        return jsonify({'error': '刪除失敗', 'message': str(e)}), 500
-    
-    
 # ===== User Endpoints =====
 @app.route('/register', methods=['POST'])
 def register():
@@ -311,6 +273,45 @@ def get_my_account():
     
     app.logger.info(f"User {user.username} retrieved own account info")
     return jsonify(user.to_dict()), 200
+
+
+@app.route('/user', methods=['PATCH'])
+@auth.login_required
+def update_my_account():
+    user = get_current_user_safe()
+    if not user:
+        app.logger.error("Account update failed: no current user")
+        return jsonify({'error': '用戶不存在', 'message': '找不到當前用戶'}), 404
+    
+    data = request.get_json() or {}
+    username = data.get('username')
+    team = data.get('team')
+    iq = data.get('iq')
+
+    if username:
+        if User.query.filter_by(username=username).first() and username != user.username:
+            app.logger.warning(f"Username {username} already exists for update")
+            return jsonify({'error': '用戶已存在', 'message': '使用者名稱已存在'}), 400
+        user.username = username
+        app.logger.info(f"User {user.username} updated username to {username}")
+    
+    if team is not None:
+        user.team = team
+        app.logger.info(f"User {user.username} updated team to {team}")
+    
+    if iq is not None:
+        user.iq = iq
+        app.logger.info(f"User {user.username} updated IQ to {iq}")
+
+    try:
+        db.session.commit()
+        app.logger.info(f"User {user.username} updated account successfully")
+        return jsonify(user.to_dict()), 200
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Account update failed for {user.username}: {str(e)}")
+        return jsonify({'error': '更新失敗', 'message': str(e)}), 500
+
 
 @app.route('/user', methods=['DELETE'])
 @auth.login_required
