@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, current_app as app
-from ..extensions import auth, db
+from ..extensions import auth, db, socketio
 from ..models import User
 
 users_bp = Blueprint('users', __name__)
@@ -23,6 +23,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         app.logger.debug(f"User {username} registered successfully")
+        socketio.emit('new_user', {'username': username}, namespace='/')
         return jsonify({'message': '註冊成功'}), 201
     except Exception as e:
         db.session.rollback()

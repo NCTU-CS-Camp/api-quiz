@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from .config     import Config
-from .extensions import db, auth
+from .extensions import db, auth, socketio
 import app.auth # 初始化 auth 
 from .logger     import setup_logger
 from .routes.questions import questions_bp
@@ -13,6 +13,7 @@ def create_app():
     # init extensions
     setup_logger(app)
     db.init_app(app)
+    socketio.init_app(app)
     
     @app.before_request
     def log_request_info():

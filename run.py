@@ -1,5 +1,5 @@
 from app import create_app
-from app.extensions import db
+from app.extensions import db, socketio
 from app.models import User
 
 app = create_app()
@@ -13,4 +13,4 @@ with app.app_context():
         db.session.commit()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=9000, debug=True)
