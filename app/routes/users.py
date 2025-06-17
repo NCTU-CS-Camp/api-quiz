@@ -2,10 +2,10 @@ from flask import Blueprint, jsonify, request, current_app as app
 from ..extensions import auth, db, socketio
 from ..models import User
 
-users_bp = Blueprint('users', __name__)
+users_bp = Blueprint('users', __name__, url_prefix='/users')
 
-@users_bp.route('/register', methods=['POST'])
-def register():
+@users_bp.route('/', methods=['POST'])
+def create_user():
     data = request.get_json() or {}
     username = data.get('username'); password = data.get('password')
     
@@ -30,9 +30,9 @@ def register():
         app.logger.error(f"Registration failed for {username}: {str(e)}")
         return jsonify({'error': '註冊失敗', 'message': str(e)}), 500
 
-@users_bp.route('/user', methods=['GET','PATCH','DELETE'])
+@users_bp.route('/me', methods=['GET','PATCH','DELETE'])
 @auth.login_required
-def manage_user():
+def manage_current_user():
     user = auth.current_user()
     if not user:
         app.logger.error("User info request failed: no current user")
@@ -75,7 +75,7 @@ def manage_user():
             return jsonify({'error': '刪除失敗', 'message': str(e)}), 500
 
 
-@users_bp.route('/users/count', methods=['GET'])
+@users_bp.route('/count', methods=['GET'])
 def total_users():
     """回傳目前 User table 的總筆數"""
     try:
