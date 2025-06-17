@@ -44,9 +44,9 @@ def answer_question(id):
         old_iq = user.iq
         user.iq += 10
         db.session.commit()
-        app.logger.info(f"User {user.username} answered question {id} correctly. IQ: {old_iq} -> {user.iq}")
+        app.logger.debug(f"User {user.username} answered question {id} correctly. IQ: {old_iq} -> {user.iq}")
         return jsonify({'message': '回答正確！你的 IQ 增加了 10', 'new_iq': user.iq}), 200
     else:
-        app.logger.info(f"User {user.username} answered question {id} incorrectly")
+        app.logger.debug(f"User {user.username} answered question {id} incorrectly")
         return jsonify({'error': '回答錯誤', 'message': '答案不正確，請再試一次'}), 400
 
