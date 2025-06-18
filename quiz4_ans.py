@@ -2,35 +2,35 @@ import requests
 
 API_URL = "http://localhost:9000"
 
-USERNAME = "your_username"  # 替換為你的用戶名
-PASSWORD = "your_password"  # 替換為你的密碼
+USERNAME = "David"
+PASSWORD = "123"
 
-# 任務六 取得問題數
+# 任務六 使用 GET 方法取得問題
 def get_questions():
-    response = requests._____(f"{API_URL}/questions", auth=(USERNAME, PASSWORD)) # <1> HTTP 方法
-    if response.status_code == _____:  # <2> 狀態碼
+    response = requests.get(f"{API_URL}/questions", auth=(USERNAME, PASSWORD))
+    if response.status_code == 200:
         print(response.json())
         return response.json()
     else:
         return None
 
-# 任務七 取得各問題
+# 任務七 使用 GET 方法取得各問題
 def get_question(question_id):
-    response = requests._____(f"{API_URL}/questions/{question_id}", auth=(USERNAME, PASSWORD)) # <3> HTTP 方法
-    if response.status_code == _____:  # <4> 狀態碼
+    response = requests.get(f"{API_URL}/questions/{question_id}", auth=(USERNAME, PASSWORD))
+    if response.status_code == 200:
         return response.json()
     else:
         return None
     
     
-# 任務八 提交答案
+# 任務八 使用 POST 方法提交答案
 def submit_answer(question_id, answer):
-    response = requests._____(                  # <5> HTTP 方法
+    response = requests.post(
         f"{API_URL}/questions/{question_id}",
         auth=(USERNAME, PASSWORD),
         json={"answer": answer}
     )
-    if response.status_code == _____:           # <6> 狀態碼
+    if response.status_code == 200:
         return response.json()
     elif response.status_code == 400:
         print("提交的答案格式錯誤或答案不正確。")
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     get_questions()
     question_id = 1  # 假設我們要取得問題 ID 為 1 的問題
     question = get_question(question_id)
-    if _____:        # <7> 檢查問題是否存在
+    if not question: # 取得失敗及為空
         print("無法取得問題，請檢查問題 ID 或網絡連接。")
         exit(1)
     print("問題:", question['question'])
