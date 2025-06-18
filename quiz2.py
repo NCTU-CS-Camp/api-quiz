@@ -34,7 +34,7 @@ def delete_my_account():
 
 
 if __name__ == "__main__":
-    my_name = "alice"
+    my_name = "your_username"
     my_team = "100"
     my_iq = 100
     update_my_account(my_name, my_team, my_iq)

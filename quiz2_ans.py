@@ -32,7 +32,7 @@ def delete_my_account():
 if __name__ == "__main__":
     my_team = "100"
     my_iq = 100
-    update_my_account("alice", my_team, my_iq)
+    update_my_account("David", my_team, my_iq)
     delete_my_account() # 刪除了怎麼辦？再去 quiz1.py 重新註冊一次
 
   
