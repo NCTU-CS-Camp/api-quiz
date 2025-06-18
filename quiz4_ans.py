@@ -32,13 +32,10 @@ def submit_answer(question_id, answer):
     )
     if response.status_code == 200:
         return response.json()
-    elif response.status_code == 400:
-        print("提交的答案格式錯誤或答案不正確。")
-        return None
-    elif response.status_code == 405:
-        print("這個問題不用提交答案。")
     else:
+        print(f"error: {response.status_code} - {response.json().get('error', '未知錯誤')}")
         return None
+
     
 if __name__ == "__main__":
     get_questions()
