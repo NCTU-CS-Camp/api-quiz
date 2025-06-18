@@ -8,21 +8,21 @@ def get_joke():
     """從 JokeAPI 獲取笑話"""
     url = "https://v2.jokeapi.dev/joke/Any"
 
-    # 發送請求
-    response = requests._____(url)      # <1> HTTP 方法 
+    # 發送 GET 請求
+    response = requests.get(url)
     
     # 檢查請求是否成功
-    if response.status_code == _____:   # <2> 狀態碼  
-        joke_data = response.____()     # <3> 解析 JSON
+    if response.status_code == 200:
+        joke_data = response.json()
         
         # 檢查笑話類型
         if joke_data['type'] == 'single':
             # 單行笑話
-            print(f"笑話: {joke_data[____]}")    # <4> 笑話內容 (去JokeAPI 網站 查看)
+            print(f"笑話: {joke_data['joke']}")
         elif joke_data['type'] == 'twopart':
             # 兩段式笑話
-            print(f"問題: {joke_data['_____']}") # <5> 笑話問題
-            print(f"答案: {joke_data['_____']}") # <6> 笑話答案
+            print(f"問題: {joke_data['setup']}")
+            print(f"答案: {joke_data['delivery']}")
         
         
     else:
