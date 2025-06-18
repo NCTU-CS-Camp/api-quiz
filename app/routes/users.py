@@ -68,6 +68,7 @@ def manage_current_user():
             db.session.delete(user)
             db.session.commit()
             app.logger.debug(f"User {user.username} deleted own account successfully")
+            socketio.emit('delete_user', {'username': user.username}, namespace='/')
             return jsonify({'message': '帳號已刪除'}), 200
         except Exception as e:
             db.session.rollback()

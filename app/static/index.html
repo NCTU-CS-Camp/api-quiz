@@ -410,13 +410,13 @@
       });
       
       // 只需要設定總生命週期，CSS會自動處理動畫
-      const totalLifetime = 15800; // 0.8s出現 + 8s延遲 + 7s淡出
+      // const totalLifetime = 15800; // 0.8s出現 + 8s延遲 + 7s淡出
       
-      setTimeout(() => {
-        if (bubble.parentNode) {
-          bubble.remove();
-        }
-      }, totalLifetime);
+      // setTimeout(() => {
+      //   if (bubble.parentNode) {
+      //     bubble.remove();
+      //   }
+      // }, totalLifetime);
     }
 
     // Socket 連接
@@ -432,14 +432,22 @@
 
     socket.on('new_user', data => {
       createBubble(data.username);
-      // totalCount = (totalCount ?? 0) + 1;
-      // updateStats();
       // fetchTotalCount();
     });
-    
+
+    socket.on('delete_user', data => {
+      totalCount = (totalCount ?? 0) - 1;
+      updateStats();
+    });
+
+    setInterval(() => {
+      // 每1分鐘自動更新總註冊數
+      fetchTotalCount();
+    }, 60 * 1000); // 1分鐘
+
     // 測試模式（可以移除或註解掉）
-    let testUserId = 1;
-    const testNames = ['小明', '小華', '小美', '阿強', '小花', 'Alex', 'Emma', 'Jack', 'Lisa', 'David'];
+    // let testUserId = 1;
+    // const testNames = ['小明', '小華', '小美', '阿強', '小花', 'Alex', 'Emma', 'Jack', 'Lisa', 'David'];
     
     // setInterval(() => {
     //   const randomName = testNames[Math.floor(Math.random() * testNames.length)];
