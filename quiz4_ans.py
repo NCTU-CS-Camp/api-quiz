@@ -35,6 +35,8 @@ def submit_answer(question_id, answer):
     elif response.status_code == 400:
         print("提交的答案格式錯誤或答案不正確。")
         return None
+    elif response.status_code == 405:
+        print("這個問題不用提交答案。")
     else:
         return None
     
@@ -43,7 +45,7 @@ if __name__ == "__main__":
     question_id = 1  # 假設我們要取得問題 ID 為 1 的問題
     question = get_question(question_id)
     if not question: # 取得失敗及為空
-        print("無法取得問題，請檢查問題 ID 或網絡連接。")
+        print("無法取得問題，請檢查問題 ID 或是否登入。")
         exit(1)
     print("問題:", question['question'])
     

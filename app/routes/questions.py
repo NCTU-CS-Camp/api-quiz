@@ -23,6 +23,9 @@ def manage_questions(id):
         if not user:
             return jsonify({'error': '未登入或無效的用戶'}), 401
         
+        if id == 1:
+            return jsonify({'error': '問題 1 不需要回答'}), 405, {'Allow': 'GET'}
+        
         data = request.get_json() or {}
         ans  = data.get('answer')
         if not ans:
