@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, current_app as app
 from ..extensions import auth, db
+from ..models import UserAnswer, User
 
 questions_bp = Blueprint('questions', __name__, url_prefix='/questions')
 
@@ -24,7 +25,7 @@ def manage_questions(id):
             return jsonify({'error': '未登入或無效的用戶'}), 401
         
         if id == 1:
-            return jsonify({'error': '問題 1 不需要回答'}), 405, {'Allow': 'GET'}
+            return jsonify({'error': '這個問題沒有正確答案'}), 405, {'Allow': 'GET'}
         
         data = request.get_json() or {}
         ans  = data.get('answer')
@@ -42,7 +43,15 @@ def manage_questions(id):
             app.logger.error(f"Error reading answer for question {id}: {str(e)}")
             return jsonify({'error': '讀取答案失敗', 'message': str(e)}), 500
 
-        if ans.strip() == correct_answer:
+        if ans.strip().lower() == correct_answer.lower():
+            # Check if user has already answered this question
+            existing = UserAnswer.query.filter_by(user_id=user.id, question_id=id).first()
+            if existing:
+                return jsonify({'error': '已經回答過此題，無法重複得分'}), 400
+            
+            # record answer
+            record = UserAnswer(user_id=user.id, question_id=id)
+            db.session.add(record)
             old_iq = user.iq
             user.iq += 10
             db.session.commit()
