@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, current_app as app
 from ..extensions import auth, db
-from ..models import UserAnswer, User
+from ..models import UserAnswer, User, Favorite
 
 questions_bp = Blueprint('questions', __name__, url_prefix='/questions')
 
@@ -25,7 +25,22 @@ def manage_questions(id):
             return jsonify({'error': '未登入或無效的用戶'}), 401
         
         if id == 1:
-            return jsonify({'error': '這個問題沒有正確答案'}), 405, {'Allow': 'GET'}
+            data = request.get_json() or {}
+            fav = data.get('answer', '').strip()
+            if not fav:
+                return jsonify({'error': '請提供您最喜歡的隊輔名稱'}), 400
+
+            # （如要確保每人只能存一次，可先刪除舊紀錄）
+            Favorite.query.filter_by(user_id=user.id).delete()
+
+            record = Favorite(user_id=user.id, favorite_name=fav)
+            db.session.add(record)
+            db.session.commit()
+
+            return jsonify({
+                'message': '最喜歡的隊輔已送出',
+                'favorite': fav
+            }), 200
         
         data = request.get_json() or {}
         ans  = data.get('answer')

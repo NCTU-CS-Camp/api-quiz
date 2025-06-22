@@ -35,3 +35,15 @@ class UserAnswer(db.Model):
     __table_args__ = (
         db.UniqueConstraint('user_id', 'question_id', name='_user_question_uc'),
     )
+    
+class Favorite(db.Model):
+    __tablename__ = 'favorites'
+    id            = db.Column(db.Integer, primary_key=True)
+    user_id       = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    favorite_name = db.Column(db.String(80), nullable=False)
+    created_at    = db.Column(db.DateTime, server_default=db.func.now())
+
+    # 確保同一使用者只存一次
+    __table_args__ = (
+        db.UniqueConstraint('user_id', name='_user_fav_uc'),
+    )
