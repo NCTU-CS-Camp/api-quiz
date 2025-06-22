@@ -5,6 +5,13 @@ API_URL = "http://localhost:9000"
 USERNAME = "David"
 PASSWORD = "123"
 
+def get_api_key():
+    response = requests.get(f"{API_URL}/api-key")
+    if response.status_code == 200:
+        return response.json().get("api_key")
+    else:
+        return None
+    
 # 任務一 使用 Gemini 生成答案
 def generate_answer(question):
     full_text = ""

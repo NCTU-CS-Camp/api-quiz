@@ -5,9 +5,16 @@ API_URL = "http://localhost:9000"
 USERNAME = "David"
 PASSWORD = "123"
 
+def get_api_key():
+    response = requests.get(f"{API_URL}/api-key")
+    if response.status_code == 200:
+        return response.json().get("api_key")
+    else:
+        return None
+
 # 任務一 使用 Gemini 生成答案
 def generate_answer(question):
-    GOOGLE_API_KEY = "AIzaSyCxbVjDyqLssYuc4VWqbHK34YDeuCz7_uQ"
+    GOOGLE_API_KEY = get_api_key()
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
     payload = {
@@ -77,7 +84,7 @@ def submit_answer(question_id, answer):
 
     
 if __name__ == "__main__":
-    question_id = 3  # 假設我們要取得問題 ID 為 3 的問題
+    question_id = 7  # 假設我們要取得問題 ID 為 3 的問題
     question = get_question(question_id)
     if not question: # 取得失敗及為空
         print("無法取得問題，請檢查問題 ID 或是否登入。")

@@ -8,8 +8,8 @@ def get_api_key():
         return response.json().get("api_key")
     else:
         return None
-
-
+    
+    
 # 任務一：使用 Google Gemini API 生成內容
 def generate_content():
     GOOGLE_API_KEY = get_api_key()
