@@ -7,87 +7,21 @@ PASSWORD = "123"
 
 # 任務一 使用 Gemini 生成答案
 def generate_answer(question):
-    GOOGLE_API_KEY = "AIzaSyCxbVjDyqLssYuc4VWqbHK34YDeuCz7_uQ"
-    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    full_text = ""
+    return full_text
 
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {"text": f"Answer question: {question}"}
-                ]
-            }
-        ]
-    }
-
-    response = requests.post(
-        f"{url}?key={GOOGLE_API_KEY}",
-        json=payload
-    )
-
-    if response.ok:
-        data = response.json()
-        
-        # 基本檢查
-        if "candidates" not in data or not data["candidates"]:
-            print("No candidates returned.")
-            exit(1)
-            
-        # 取第一個 candidate
-        candidate = data["candidates"][0]
-
-        # 取 content、再取 parts
-        content = candidate.get("content", {})
-        parts = content.get("parts", [])
-        if not parts:
-            print("No parts in content.")
-            exit(1)
-            
-        # 將所有 parts 的文字串起來
-        full_text = "".join(part.get("text", "") for part in parts)
-
-        return full_text
-            
-    else:
-        print(f"Error {response.status_code}: {response.text}")
-        return None
-
-
-# 任務二 使用 GET 方法取得問題
-def get_questions():
-    response = requests.get(f"{API_URL}/questions", auth=(USERNAME, PASSWORD))
-    if response.status_code == 200:
-        print(response.json())
-        return response.json()
-    else:
-        return None
-
-# 任務三 使用 GET 方法取得各問題
+# 任務二 使用 GET 方法取得各問題
 def get_question(question_id):
-    response = requests.get(f"{API_URL}/questions/{question_id}", auth=(USERNAME, PASSWORD))
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+    pass
     
     
-# 任務四 使用 POST 方法提交答案
+# 任務三 使用 POST 方法提交答案
 def submit_answer(question_id, answer):
-    response = requests.post(
-        f"{API_URL}/questions/{question_id}",
-        auth=(USERNAME, PASSWORD),
-        json={"answer": answer}
-    )
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"error: {response.status_code} - {response.json().get('error', '未知錯誤')}")
-        return None
+    pass
 
     
 if __name__ == "__main__":
-    get_questions()
-    question_id = 3  # 假設我們要取得問題 ID 為 1 的問題
+    question_id = 3
     question = get_question(question_id)
     if not question: # 取得失敗及為空
         print("無法取得問題，請檢查問題 ID 或是否登入。")
