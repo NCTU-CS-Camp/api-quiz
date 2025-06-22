@@ -22,7 +22,7 @@ def setup_logger(app):
     console_handler.setLevel(logging.WARNING)
     
     # 設定 app logger
-    app.logger.setLevel(logging.DEBUG)
+    app.logger.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
     app.logger.addHandler(console_handler)
     
