@@ -22,6 +22,10 @@ def create_app():
     def index():
         return app.send_static_file('index.html')
     
+    @app.route('/favorites')
+    def favorites_page():
+        return app.send_static_file('favorites.html')
+
     @app.before_request
     def log_request_info():
         """記錄請求資訊"""

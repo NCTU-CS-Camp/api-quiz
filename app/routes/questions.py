@@ -76,3 +76,18 @@ def manage_questions(id):
             app.logger.debug(f"User {user.username} answered question {id} incorrectly")
             return jsonify({'error': '回答錯誤', 'message': '答案不正確，請再試一次'}), 400
 
+
+@questions_bp.route('/1/favorites', methods=['GET'])
+def favorite_stats():
+    # 查詢所有 favorite_name 及其計數
+    stats = (
+        db.session.query(
+            Favorite.favorite_name,
+            db.func.count(Favorite.id).label('count')
+        )
+        .group_by(Favorite.favorite_name)
+        .all()
+    )
+    # 組成 JSON
+    result = [{'name': name, 'count': cnt} for name, cnt in stats]
+    return jsonify(result), 200

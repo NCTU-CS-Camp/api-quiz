@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>隊輔喜好統計</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h2>哪個隊輔最受小朋友喜歡？</h2>
+  <canvas id="favChart" width="600" height="400"></canvas>
+
+  <script>
+    const API_URL = 'http://localhost:9000';
+    let chart;
+
+    async function fetchStats() {
+      const res = await fetch(`${API_URL}/questions/1/favorites`);
+      return await res.json();
+    }
+
+    async function updateChart() {
+      const data = await fetchStats();
+      const labels = data.map(item => item.name);
+      const counts = data.map(item => item.count);
+
+      if (!chart) {
+        const ctx = document.getElementById('favChart').getContext('2d');
+        chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              label: '票數',
+              data: counts,
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      } else {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = counts;
+        chart.update();
+      }
+    }
+
+    // 每 1 秒重新抓取一次
+    updateChart();
+    setInterval(updateChart, 1000);
+  </script>
+</body>
+</html>
