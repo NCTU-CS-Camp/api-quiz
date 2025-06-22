@@ -1,5 +1,0 @@
-在實作分頁（pagination）時，以下哪種做法在資料量極大（數百萬筆）時能保持最穩定的效能？
-A. OFFSET + LIMIT  
-B. 在 client 端先抓所有 ID，再分頁時再用 IN()  
-C. Cursor-based pagination（以最後一筆的主鍵當 cursor）  
-D. 在資料庫建立物化檢視（materialized view）

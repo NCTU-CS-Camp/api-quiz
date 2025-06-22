@@ -1,5 +1,0 @@
-使用 POST /users 註冊新用戶 bob，密碼為 secret。下列哪一個 request body 是正確的？
-A. {"user":"bob","pass":"secret"}
-B. {"username":"bob","password":"secret"}
-C. {"name":"bob","password":"secret"}
-D. {"username":"bob","pwd":"secret"}

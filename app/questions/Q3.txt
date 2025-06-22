@@ -1,5 +1,0 @@
-在 RESTful API 設計中，下列哪一組敘述最正確地描述 GET 與 POST 的關鍵差異？
-A. GET 讀取資料；POST 刪除資料
-B. GET 用於讀取，不改變伺服器狀態；POST 用於新增或觸發操作，通常會改變伺服器狀態
-C. GET 用於更新資料；POST 用於讀取資料
-D. GET 能夠攜帶 JSON body；POST 不能攜帶 body
