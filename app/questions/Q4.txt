@@ -1,0 +1,5 @@
+在高併發環境下，為了避免對同一筆資源的「競爭式更新」（race condition），以下哪種做法最合適？
+A. 在 API 層加鎖 (mutex)  
+B. 使用資料庫的悲觀鎖（SELECT … FOR UPDATE）  
+C. 在程式中 sleep 一段隨機時間後再嘗試  
+D. 單純依賴資料庫事務（transaction）即可
