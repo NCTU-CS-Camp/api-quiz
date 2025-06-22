@@ -7,7 +7,7 @@ USERNAME = "David"
 PASSWORD = "123"
 
 
-# 任務三 使用 PATCH 方法更新個人資料
+# 任務一 使用 PATCH 方法更新個人資料
 def update_my_account(username, team, iq):
     """更新自己的帳號資訊"""
     resp = requests.patch(
@@ -18,7 +18,7 @@ def update_my_account(username, team, iq):
     print("PATCH /users/me →", resp.status_code, resp.json())
     return resp.json()
 
-# 任務四 使用 DELETE 方法刪除個人帳號
+# 任務二 使用 DELETE 方法刪除個人帳號
 def delete_my_account():
     """刪除自己的帳號"""
     resp = requests.delete(

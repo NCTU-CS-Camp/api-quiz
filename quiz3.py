@@ -3,7 +3,7 @@ import requests
 
 # joke 網站: https://jokeapi.dev/
 
-# 任務五：從 JokeAPI 獲取笑話並印出來
+# 任務一：從 JokeAPI 獲取笑話並印出來
 def get_joke():
     """從 JokeAPI 獲取笑話"""
     url = "https://v2.jokeapi.dev/joke/Any"

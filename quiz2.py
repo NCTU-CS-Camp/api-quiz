@@ -7,7 +7,7 @@ USERNAME = "your_username"  # 替換為你的用戶名
 PASSWORD = "your_password"  # 替換為你的密碼
 
 
-# 任務三 更新個人資料
+# 任務一 更新個人資料
 def update_my_account(username, team, iq):
     """
     TODO: 呼叫 PATCH /user，帶入 JSON 更新欄位，並回傳 JSON 結果
@@ -21,7 +21,7 @@ def update_my_account(username, team, iq):
     print("/users/me →", resp.status_code, resp.json())
     return resp.json()
 
-# 任務四 刪除個人帳號
+# 任務二 刪除個人帳號
 def delete_my_account():
     """刪除自己的帳號"""
     resp = requests._____(               # <2> HTTP 方法

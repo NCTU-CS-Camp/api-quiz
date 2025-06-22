@@ -5,6 +5,7 @@ API_URL = "http://localhost:9000"
 USERNAME = "David"
 PASSWORD = "123"
 
+# 任務一 使用 Gemini 生成答案
 def generate_answer(question):
     GOOGLE_API_KEY = "AIzaSyCxbVjDyqLssYuc4VWqbHK34YDeuCz7_uQ"
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
@@ -52,7 +53,7 @@ def generate_answer(question):
         return None
 
 
-# 任務六 使用 GET 方法取得問題
+# 任務二 使用 GET 方法取得問題
 def get_questions():
     response = requests.get(f"{API_URL}/questions", auth=(USERNAME, PASSWORD))
     if response.status_code == 200:
@@ -61,7 +62,7 @@ def get_questions():
     else:
         return None
 
-# 任務七 使用 GET 方法取得各問題
+# 任務三 使用 GET 方法取得各問題
 def get_question(question_id):
     response = requests.get(f"{API_URL}/questions/{question_id}", auth=(USERNAME, PASSWORD))
     if response.status_code == 200:
@@ -70,7 +71,7 @@ def get_question(question_id):
         return None
     
     
-# 任務八 使用 POST 方法提交答案
+# 任務四 使用 POST 方法提交答案
 def submit_answer(question_id, answer):
     response = requests.post(
         f"{API_URL}/questions/{question_id}",

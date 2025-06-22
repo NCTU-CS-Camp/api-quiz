@@ -1,6 +1,7 @@
 import requests
 
-def gererate_content():
+# 任務一：使用 Google Gemini API 生成內容
+def generate_content():
     GOOGLE_API_KEY = "AIzaSyCxbVjDyqLssYuc4VWqbHK34YDeuCz7_uQ"
 
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
@@ -50,4 +51,4 @@ def gererate_content():
         print(f"Error {response.status_code}: {response.text}")
 
 if __name__ == "__main__":
-    gererate_content()
+    generate_content()
