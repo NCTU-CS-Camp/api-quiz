@@ -6,6 +6,7 @@ import app.auth # 初始化 auth
 from .logger     import setup_logger
 from .routes.questions import questions_bp
 from .routes.users     import users_bp
+from .routes.api_keys   import api_keys_bp
 
 def create_app():
     app = Flask(__name__)
@@ -45,6 +46,7 @@ def create_app():
     # register blueprints
     app.register_blueprint(questions_bp)
     app.register_blueprint(users_bp)
+    app.register_blueprint(api_keys_bp)
     
     # Error Handlers
     @app.errorhandler(400)
