@@ -1,10 +1,12 @@
+import os
 import requests
+from dotenv import load_dotenv
 
+load_dotenv()
 
-API_URL = "http://localhost:9000"
-
-USERNAME = "David"
-PASSWORD = "123"
+API_URL  = os.getenv("API_URL", "http://localhost:9000")
+USERNAME = os.getenv("USERNAME", "your_username")
+PASSWORD = os.getenv("PASSWORD", "your_password")
 
 
 # 任務一 使用 PATCH 方法更新個人資料

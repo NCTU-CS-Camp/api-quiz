@@ -1,6 +1,12 @@
+import os
 import requests
+from dotenv import load_dotenv
 
-API_URL = "http://localhost:9000"
+load_dotenv()
+
+API_URL  = os.getenv("API_URL", "http://localhost:9000")
+USERNAME = os.getenv("USERNAME", "your_username")
+PASSWORD = os.getenv("PASSWORD", "your_password")
 
 def get_api_key():
     response = requests.get(f"{API_URL}/api-key")
