@@ -10,14 +10,14 @@ PASSWORD = os.getenv("PASSWORD", "your_password")
 
 
 # 任務一 更新個人資料
-def update_my_account(username, team, iq):
+def update_my_account(new_info):
     """
     TODO: 呼叫 PATCH /user，帶入 JSON 更新欄位，並回傳 JSON 結果
     """
     resp = requests._____(              # <1> HTTP 方法
         f"{API_URL}/users/me",
         auth=(USERNAME, PASSWORD),
-        json={"username": username, "team": team, "iq": iq}
+        json=new_info
     )
     print("更新個人資料")
     print("/users/me →", resp.status_code, resp.json())
@@ -36,10 +36,13 @@ def delete_my_account():
 
 
 if __name__ == "__main__":
-    my_name = "your_username"
-    my_team = "100"
-    my_iq = 100
-    update_my_account(my_name, my_team, my_iq)
+    new_info = {
+        "username": "new_username",
+        "password": "new_password",
+        "team": "100",
+        "iq": 150
+    }
+    update_my_account(new_info)
     delete_my_account()        # 刪除了怎麼辦？再去 quiz1.py 重新註冊一次
 
   

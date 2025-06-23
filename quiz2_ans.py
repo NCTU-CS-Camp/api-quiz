@@ -10,12 +10,12 @@ PASSWORD = os.getenv("PASSWORD", "your_password")
 
 
 # 任務一 使用 PATCH 方法更新個人資料
-def update_my_account(username, team, iq):
+def update_my_account(new_info):
     """更新自己的帳號資訊"""
     resp = requests.patch(
         f"{API_URL}/users/me",
         auth=(USERNAME, PASSWORD),
-        json={"username": username, "team": team, "iq": iq}
+        json=new_info
     )
     print("PATCH /users/me →", resp.status_code, resp.json())
     return resp.json()
@@ -32,9 +32,13 @@ def delete_my_account():
 
 
 if __name__ == "__main__":
-    my_team = "100"
-    my_iq = 100
-    update_my_account("David", my_team, my_iq)
-    delete_my_account() # 刪除了怎麼辦？再去 quiz1.py 重新註冊一次
+    new_info = {
+        "username": "new_username",
+        "password": "new_password",
+        "team": "100",
+        "iq": 150
+    }
+    update_my_account(new_info)
+    # delete_my_account() # 刪除了怎麼辦？再去 quiz1.py 重新註冊一次
 
   
