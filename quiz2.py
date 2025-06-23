@@ -1,3 +1,4 @@
+import utf8_basic_patch
 import os
 import requests
 from dotenv import load_dotenv
@@ -43,6 +44,6 @@ if __name__ == "__main__":
         "iq": 150
     }
     update_my_account(new_info)
-    delete_my_account()        # 刪除了怎麼辦？再去 quiz1.py 重新註冊一次
+    # delete_my_account()        # 刪除了怎麼辦？再去 quiz1.py 重新註冊一次
 
   
