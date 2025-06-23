@@ -54,8 +54,8 @@ def create_app():
     @app.errorhandler(RateLimitExceeded)
     def handle_rate_limit(e):
         return jsonify({
-            'error': '不要一直戳API啦，再戳我就去戳你',
-            'message': f'已超過允許的請求次數，請稍後再試 ({e.description})'
+            'error': '請求過於頻繁',
+            'message': f'不要一直戳API啦，再戳我就去戳你 ({e.description})'
         }), 429
     
     @app.errorhandler(400)
