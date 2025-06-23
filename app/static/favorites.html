@@ -11,7 +11,7 @@
   <canvas id="favChart" width="600" height="400"></canvas>
 
   <script>
-    const API_URL = 'http://localhost:9000';
+    const API_URL = `${window.location.protocol}//${window.location.host}`;
     let chart;
 
     async function fetchStats() {
