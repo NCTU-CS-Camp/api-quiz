@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app as app
 from ..extensions import auth, db, socketio
 from ..models import User
+from sqlalchemy.exc import IntegrityError
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
@@ -13,10 +14,10 @@ def create_user():
 
     if not username or not password:
         app.logger.warning(f"Registration failed: missing parameters for {username}")
-        return jsonify({'error':'缺少參數'}), 400
+        return jsonify({'error':'缺少用戶名或密碼'}), 400
     if User.query.filter_by(username=username).first():
         app.logger.warning(f"Registration failed: user {username} already exists")
-        return jsonify({'error':'用戶已存在'}), 400
+        return jsonify({'error':'用戶已存在'}), 409
     try:
         user = User(username=username)
         user.set_password(password)
@@ -25,6 +26,10 @@ def create_user():
         app.logger.debug(f"User {username} registered successfully")
         socketio.emit('new_user', {'username': username}, namespace='/')
         return jsonify({'message': '註冊成功'}), 201
+    except IntegrityError:
+        db.session.rollback()
+        app.logger.error(f"Registration failed for {username} due to an integrity error (race condition).")
+        return jsonify({'error': '用戶名已被註冊，請換一個再試'}), 409
     except Exception as e:
         db.session.rollback()
         app.logger.error(f"Registration failed for {username}: {str(e)}")
@@ -45,18 +50,31 @@ def manage_current_user():
     elif request.method == 'PATCH':
         data = request.get_json() or {}
         if 'username' in data:
-            user.username = data['username']
+            new_username = data['username']
+            existing_user = User.query.filter(User.username == new_username, User.id != user.id).first()
+            if existing_user:
+                app.logger.warning(f"Update failed for {user.username}: new username {new_username} already exists.")
+                return jsonify({'error': '用戶名已存在'}), 409
+            user.username = new_username
         if 'password' in data:
             user.set_password(data['password'])
         if 'team' in data:
             user.team = data['team']
-        if 'iq' in data:
-            user.iq = data['iq']
+
+        iq_modified = 'iq' in data
         
         try:
             db.session.commit()
             app.logger.debug(f"User {user.username} updated account successfully")
-            return jsonify(user.to_dict()), 200
+            response_data = user.to_dict()
+            message = 'IQ 沒辦法更新喔, 但其他已更新了' if iq_modified else '更新成功'
+            return jsonify({'message': message, 'user': response_data}), 200
+        except IntegrityError:
+            db.session.rollback()
+            app.logger.error(f"Account update failed for {user.username} due to an integrity error (e.g., race condition on username).")
+            # 即使事前檢查了，這裡還是可能因為併發而出錯
+            return jsonify({'error': '用戶名已被使用，請再試一次'}), 409 # 409 Conflict 更適合這種情況
+
         except Exception as e:
             db.session.rollback()
             app.logger.error(f"Account update failed for {user.username}: {str(e)}")
