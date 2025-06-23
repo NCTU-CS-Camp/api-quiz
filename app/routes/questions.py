@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app as app
-from ..extensions import auth, db
+from ..extensions import auth, db, limiter
 from ..models import UserAnswer, User, Favorite
+from flask_limiter.util import get_remote_address
 
 questions_bp = Blueprint('questions', __name__, url_prefix='/questions')
 
@@ -10,6 +11,7 @@ def list_questions():
     return jsonify({'message': '總共有5個問題，用 /questions/<id> 取得問題內容'}), 200
 
 @questions_bp.route('/<int:id>', methods=['GET', 'POST'])
+@limiter.limit("10 per minute", methods=["POST"], key_func=get_remote_address)
 @auth.login_required
 def manage_questions(id):
     if request.method == 'GET':
