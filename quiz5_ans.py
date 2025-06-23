@@ -51,12 +51,7 @@ def generate_content():
         # 取第一個 candidate
         candidate = data["candidates"][0]
 
-        # 取 content、再取 parts
-        content = candidate.get("content", {})
-        parts = content.get("parts", [])
-        if not parts:
-            print("No parts in content.")
-            exit(1)
+        parts = candidate["content"]["parts"]       # <4> 取 content、再取 parts
             
         # 將所有 parts 的文字串起來
         full_text = "".join(part.get("text", "") for part in parts)

@@ -12,7 +12,7 @@ PASSWORD = os.getenv("PASSWORD", "your_password")
 # TODO 更新個人資料
 def update_my_account(new_info):
     """
-    TODO: 呼叫 PATCH /user，帶入 JSON 更新欄位，並回傳 JSON 結果
+    TODO: 呼叫 /user，帶入 JSON 更新欄位，並回傳 JSON 結果
     """
     resp = requests.?????(              # <1> HTTP 方法
         f"{API_URL}/users/me",

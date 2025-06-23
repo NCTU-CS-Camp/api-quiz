@@ -41,7 +41,7 @@ def get_my_account():
 if __name__ == "__main__":
     register(USERNAME, PASSWORD)   # 註冊用戶
     user = get_my_account()        # 取得自己的帳號資訊
-    if user:                       # 非空代表成功取得用戶資訊
+    if user is not None:           # 非空代表成功取得用戶資訊
         # 顯示用戶資訊
         print("=== 我的帳號資訊 ===")
         print(f"用戶名稱: {user['username']}, 所在組別: {user['team']}, IQ: {user['iq']}")
