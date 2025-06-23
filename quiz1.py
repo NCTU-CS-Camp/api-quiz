@@ -14,7 +14,7 @@ def register(username, password):
     """
     TODO: 呼叫 /users，並印出回應狀態與 JSON
     """
-    resp = requests..?????)(                      # <1> HTTP 方法
+    resp = requests.?????)(                      # <1> HTTP 方法
         f"{API_URL}/users",
         json={"username": username, "password": password}
     )

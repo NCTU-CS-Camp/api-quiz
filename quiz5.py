@@ -49,11 +49,11 @@ def generate_content():
             exit(1)
             
         # 取第一個 candidate
-        candidate = data["candidates"][0]
+        candidate = data["candidates"][?????] # <3> 取第一個候選者
 
         # 取 content、再取 parts
-        content = candidate.get("content", {})
-        parts = content.get("parts", [])
+        content = candidate.get(?????, {})    # <4> 取 content
+        parts = content.get(?????, [])        # <5> 取 parts
         if not parts:
             print("No parts in content.")
             exit(1)
