@@ -9,28 +9,28 @@ USERNAME = os.getenv("USERNAME", "your_username")
 PASSWORD = os.getenv("PASSWORD", "your_password")
 
 
-# 任務一: 註冊帳號
+# TODO: 註冊帳號
 def register(username, password):
     """
     TODO: 呼叫 /users，並印出回應狀態與 JSON
     """
-    resp = requests._____(                      # <1> HTTP 方法
+    resp = requests..?????)(                      # <1> HTTP 方法
         f"{API_URL}/users",
         json={"username": username, "password": password}
     )
     print("register →", resp.status_code, resp.json()) 
 
 
-# 任務二: 取得個人資料
+# TODO: 取得個人資料
 def get_my_account():
     """
     TODO: 呼叫 /user，並印出回應狀態與 JSON
     """
-    resp = requests._____(                     # <2> HTTP 方法
+    resp = requests.?????)(                     # <2> HTTP 方法
         f"{API_URL}/users/me",
         auth=(USERNAME, PASSWORD)
     )
-    print("/user →", resp._____, resp._____)   # <3> 印出狀態碼 & JSON
+    print("/user →", resp.?????), resp.?????)   # <3> 印出狀態碼 & JSON
     if resp.status_code == 200:
         return resp.json()
     else:

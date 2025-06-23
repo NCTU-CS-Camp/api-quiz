@@ -15,23 +15,23 @@ def get_api_key():
     else:
         return None
     
-# 任務一 使用 Gemini 生成答案
+# TODO 使用 Gemini 生成答案
 def generate_answer(question):
     full_text = ""
     return full_text
 
-# 任務二 使用 GET 方法取得各問題
+# TODO 取得各問題
 def get_question(question_id):
     pass
     
     
-# 任務三 使用 POST 方法提交答案
+# TODO 提交答案
 def submit_answer(question_id, answer):
     pass
 
     
 if __name__ == "__main__":
-    question_id = 3
+    question_id = 2  # 假設我們要取得問題 ID 為 2 的問題
     question = get_question(question_id)
     if not question: # 取得失敗及為空
         print("無法取得問題，請檢查問題 ID 或是否登入。")

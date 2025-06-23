@@ -16,14 +16,14 @@ def get_api_key():
         return None
 
 
-# 任務一：使用 Google Gemini API 生成內容
+# TODO：使用 Google Gemini API 生成內容
 def generate_content():
     GOOGLE_API_KEY = get_api_key()
 
     print("正在使用 Google Gemini 生成內容...")
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
-    question = "How does AI work?"
+    question = ?????     # <1> 問題內容
 
     payload = {
         "contents": [
@@ -35,7 +35,7 @@ def generate_content():
         ]
     }
 
-    response = requests.post(
+    response = requests.?????(              # <2> HTTP 方法
         f"{url}?key={GOOGLE_API_KEY}",
         json=payload
     )

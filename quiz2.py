@@ -9,24 +9,24 @@ USERNAME = os.getenv("USERNAME", "your_username")
 PASSWORD = os.getenv("PASSWORD", "your_password")
 
 
-# 任務一 更新個人資料
+# TODO 更新個人資料
 def update_my_account(new_info):
     """
     TODO: 呼叫 PATCH /user，帶入 JSON 更新欄位，並回傳 JSON 結果
     """
-    resp = requests._____(              # <1> HTTP 方法
+    resp = requests.?????(              # <1> HTTP 方法
         f"{API_URL}/users/me",
         auth=(USERNAME, PASSWORD),
-        json=new_info
+        json=?????                      # <2> 帶入更新的 JSON 資料
     )
     print("更新個人資料")
     print("/users/me →", resp.status_code, resp.json())
     return resp.json()
 
-# 任務二 刪除個人帳號
+# TODO 刪除個人帳號
 def delete_my_account():
     """刪除自己的帳號"""
-    resp = requests._____(               # <2> HTTP 方法
+    resp = requests.?????(               # <3> HTTP 方法
         f"{API_URL}/users/me",
         auth=(USERNAME, PASSWORD)
     )
@@ -37,8 +37,8 @@ def delete_my_account():
 
 if __name__ == "__main__":
     new_info = {
-        "username": "new_username",
-        "password": "new_password",
+        # "username": "new_username",
+        # "password": "new_password",
         "team": "100",
         "iq": 150
     }
