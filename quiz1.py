@@ -15,7 +15,7 @@ def register(username, password):
     """
     TODO: 呼叫 /users，並印出回應狀態與 JSON
     """
-    resp = requests.?????)(                      # <1> HTTP 方法
+    resp = requests.?????(                      # <1> HTTP 方法
         f"{API_URL}/users",
         json={"username": username, "password": password}
     )
@@ -27,11 +27,11 @@ def get_my_account():
     """
     TODO: 呼叫 /user，並印出回應狀態與 JSON
     """
-    resp = requests.?????)(                     # <2> HTTP 方法
+    resp = requests.?????(                     # <2> HTTP 方法
         f"{API_URL}/users/me",
         auth=(USERNAME, PASSWORD)
     )
-    print("/user →", resp.?????), resp.?????)   # <3> 印出狀態碼 & JSON
+    print("/user →", resp.?????, resp.?????)   # <3> 印出狀態碼 & JSON
     if resp.status_code == 200:
         return resp.json()
     else:
