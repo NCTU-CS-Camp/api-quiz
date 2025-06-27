@@ -1,3 +1,4 @@
+import utf8_basic_patch
 import os
 import requests
 from dotenv import load_dotenv
