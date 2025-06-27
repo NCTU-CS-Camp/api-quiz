@@ -5,7 +5,9 @@ import requests
 
 # TODO 從 JokeAPI 獲取笑話並印出來
 def get_joke():
-    """從 JokeAPI 獲取笑話"""
+    """
+    TODO: 從 JokeAPI 獲取笑話並印出來
+    """
     url = "https://v2.jokeapi.dev/joke/Any"
 
     # 發送請求

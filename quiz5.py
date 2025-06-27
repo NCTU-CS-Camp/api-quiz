@@ -18,6 +18,9 @@ def get_api_key():
 
 # TODO：使用 Google Gemini API 生成內容
 def generate_content():
+    """
+    TODO: 呼叫 Google Gemini API 生成內容
+    """
     GOOGLE_API_KEY = get_api_key()
 
     print("正在使用 Google Gemini 生成內容...")

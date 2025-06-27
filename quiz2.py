@@ -26,7 +26,9 @@ def update_my_account(new_info):
 
 # TODO 刪除個人帳號
 def delete_my_account():
-    """刪除自己的帳號"""
+    """
+    TODO: 呼叫 /user，並刪除自己的帳號，回傳 JSON 結果
+    """
     resp = requests.?????(               # <3> HTTP 方法
         f"{API_URL}/users/me",
         auth=(USERNAME, PASSWORD)
