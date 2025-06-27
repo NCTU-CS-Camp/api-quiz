@@ -11,7 +11,7 @@ PASSWORD = os.getenv("PASSWORD", "your_password")
 def get_api_key():
     response = requests.get(f"{API_URL}/api-key")
     if response.status_code == 200:
-        return response.json().get("api_key")
+        return response.json()["api_key"]
     else:
         return None
 
@@ -54,13 +54,14 @@ def generate_content():
         parts = candidate[?????][?????]       # <4> 取 content、再取 parts
             
         # 將所有 parts 的文字串起來
-        full_text = "".join(part.get("text", "") for part in parts)
+        full_text = "".join(part["text"] for part in parts)
 
-        print("Model 回覆：")
-        print(full_text)
-            
+        return full_text
     else:
         print(f"Error {response.status_code}: {response.text}")
+        return None
 
 if __name__ == "__main__":
-    generate_content()
+    result = generate_content()
+    if result:
+        print("生成的內容:", result)

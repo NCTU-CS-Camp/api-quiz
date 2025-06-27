@@ -12,7 +12,7 @@ PASSWORD = os.getenv("PASSWORD", "your_password")
 def get_api_key():
     response = requests.get(f"{API_URL}/api-key")
     if response.status_code == 200:
-        return response.json().get("api_key")
+        return response.json()["api_key"]
     else:
         return None
     

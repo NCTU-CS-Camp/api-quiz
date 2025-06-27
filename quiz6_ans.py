@@ -11,7 +11,7 @@ PASSWORD = os.getenv("PASSWORD", "your_password")
 def get_api_key():
     response = requests.get(f"{API_URL}/api-key")
     if response.status_code == 200:
-        return response.json().get("api_key")
+        return response.json()["api_key"]
     else:
         return None
 
@@ -43,18 +43,13 @@ def generate_answer(question):
             print("No candidates returned.")
             exit(1)
             
-        # 取第一個 candidate
+         # 取第一個 candidate
         candidate = data["candidates"][0]
 
-        # 取 content、再取 parts
-        content = candidate.get("content", {})
-        parts = content.get("parts", [])
-        if not parts:
-            print("No parts in content.")
-            exit(1)
+        parts = candidate["content"]["parts"]       # 取 content、再取 parts
             
         # 將所有 parts 的文字串起來
-        full_text = "".join(part.get("text", "") for part in parts)
+        full_text = "".join(part["text"] for part in parts)
 
         return full_text
             
