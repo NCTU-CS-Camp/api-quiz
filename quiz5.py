@@ -52,9 +52,9 @@ def generate_content():
             exit(1)
             
         # 取第一個 candidate
-        candidate = data["candidates"][?????] # <3> 取第一個候選者
+        candidate = data["candidates"][0] # 取第一個候選者
 
-        parts = candidate[?????][?????]       # <4> 取 content、再取 parts
+        parts = candidate[?????][?????]       # <3> 取 content、再取 parts
             
         # 將所有 parts 的文字串起來
         full_text = "".join(part["text"] for part in parts)

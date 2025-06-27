@@ -83,7 +83,7 @@ def submit_answer(question_id, answer):
 
     
 if __name__ == "__main__":
-    question_id = 5  # 假設我們要取得問題 ID 為 5 的問題
+    question_id = int(input("請輸入問題 ID: "))
     question = get_question(question_id)
     if not question: # 取得失敗及為空
         print("無法取得問題，請檢查問題 ID 或是否登入。")
