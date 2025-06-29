@@ -28,6 +28,10 @@ def create_app():
     @app.route('/fav')
     def favorites_page():
         return app.send_static_file('favorites.html')
+    
+    @app.route('/name')
+    def name_page():
+        return app.send_static_file('teams.html')
 
     @app.before_request
     def log_request_info():

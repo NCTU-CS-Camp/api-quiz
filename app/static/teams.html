@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>隊輔表</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 30px;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    .teams-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+    
+    .team-card {
+      background-color: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .team-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+      padding: 16px;
+    }
+    
+    .team-members {
+      padding: 16px;
+    }
+    ul {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+    li {
+      background: linear-gradient(90deg, #e3f2fd, #bbdefb);
+      margin: 6px 0;
+      padding: 10px 15px;
+      border-radius: 20px;
+      border-left: 4px solid #2196f3;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    li:hover {
+      background: linear-gradient(90deg, #bbdefb, #90caf9);
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    }
+    
+    li a {
+      color: inherit;
+      text-decoration: none;
+      display: inline-block;
+      flex: 1;
+    }
+    
+    .copy-btn {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-left: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .copy-btn:hover {
+      background: linear-gradient(135deg, #45a049, #4CAF50);
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    
+    .copy-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .copy-feedback {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
+    }
+    
+    .copy-feedback.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* 模態框樣式 */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+      position: relative;
+      margin: 2vh auto;
+      padding: 20px;
+      width: 90vw;
+      max-width: min(800px, 90vw);
+      max-height: 90vh;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: modalFadeIn 0.3s ease;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .modal img {
+      width: 100%;
+      height: auto;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e9ecef;
+      flex-shrink: 0;
+    }
+    
+    .modal-title {
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      font-weight: 600;
+      color: #2c3e50;
+      margin: 0;
+      word-break: break-word;
+      flex: 1;
+      margin-right: 15px;
+    }
+    
+    #modal-body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+    }
+    
+    .close {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+      color: white;
+      border: none;
+      width: clamp(30px, 8vw, 35px);
+      height: clamp(30px, 8vw, 35px);
+      border-radius: 50%;
+      font-size: clamp(14px, 4vw, 18px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+      flex-shrink: 0;
+    }
+    
+    .close:hover {
+      background: linear-gradient(135deg, #ee5a52, #ff6b6b);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+    }
+    
+    .modal-loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+    
+    .modal-error {
+      text-align: center;
+      padding: 40px;
+      color: #ff6b6b;
+      background: #fff5f5;
+      border-radius: 10px;
+      margin: 10px 0;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+    
+    @media (max-width: 768px) {
+      body { padding: 15px; }
+      h1 { font-size: 2rem; }
+      .teams-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+      li { 
+        padding: 8px 12px; 
+        font-size: 0.9rem; 
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .copy-btn {
+        align-self: flex-end;
+        margin-left: 0;
+      }
+      .modal-content {
+        width: 95vw;
+        margin: 5vh auto;
+        padding: 15px;
+        max-height: 85vh;
+      }
+      .modal img {
+        max-height: 60vh;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .teams-container {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .modal-content {
+        width: 98vw;
+        margin: 2vh auto;
+        padding: 10px;
+        max-height: 90vh;
+      }
+      .modal-header {
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+      }
+      .modal img {
+        max-height: 65vh;
+      }
+      .modal-loading,
+      .modal-error {
+        padding: 20px;
+        font-size: 0.9rem;
+      }
+    }
+    
+    @media (orientation: landscape) and (max-height: 600px) {
+      .modal-content {
+        margin: 2vh auto;
+        max-height: 95vh;
+      }
+      .modal img {
+        max-height: 50vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 複製成功提示 -->
+  <div id="copy-feedback" class="copy-feedback">已複製到剪貼簿！</div>
+  
+  <!-- 照片模態框 -->
+  <div id="photo-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title"></h3>
+        <button class="close" onclick="closeModal()">&times;</button>
+      </div>
+      <div id="modal-body">
+        <div class="modal-loading">載入中...</div>
+      </div>
+    </div>
+  </div>
+  
+  <h1>隊輔表</h1>
+  <div id="teams-container" class="teams-container">
+    <!-- 這裡由 JavaScript 動態填入 -->
+  </div>
+
+  <script>
+    // 事先在此定義或透過 fetch() 取得的 JSON 資料
+    const teamData = {
+  "1": [
+    { "realName": "馬晨瑜", "nickname": "雲妮露比醬" },
+    { "realName": "許愷洌", "nickname": "小雪寶" },
+    { "realName": "朱驛庭", "nickname": "愛木須龍" },
+    { "realName": "吳宇藤", "nickname": "米老鼠我這" },
+    { "realName": "蔡凱旭", "nickname": "史迪奇米妮" },
+    { "realName": "鄭栩安", "nickname": "X" },
+    { "realName": "郭晉維", "nickname": "金米妮" }
+  ],
+  "2": [
+    { "realName": "蔣忻勳", "nickname": "蔣梅爾" },
+    { "realName": "孫承瑞", "nickname": "李知恩嘟假嘟" },
+    { "realName": "王韋凱", "nickname": "找謝金燕" },
+    { "realName": "蔡師睿", "nickname": "樹攬佬" },
+    { "realName": "楊子賝", "nickname": "賈斯汀bibobibo" },
+    { "realName": "李馨亞", "nickname": "嘎嘎女士" }
+  ],
+  "3": [
+    { "realName": "陳宥臻", "nickname": "彩虹小嗎啡起來" },
+    { "realName": "黃佑得", "nickname": "想Cococaine" },
+    { "realName": "蔡尚融", "nickname": "FM2女郎" },
+    { "realName": "許書瑋", "nickname": "你鴉片不到我" },
+    { "realName": "許士宏", "nickname": "抽菸草C" },
+    { "realName": "張維程", "nickname": "抽菸草A" }
+  ],
+  "4": [
+    { "realName": "李泓劭", "nickname": "魔鬼頭刀" },
+    { "realName": "陳燁", "nickname": "粉紅鮭" },
+    { "realName": "陳芝瑄", "nickname": "鯊西米" },
+    { "realName": "王昱力", "nickname": "銀幣水母" },
+    { "realName": "許珮筠", "nickname": "美味鮑魚" },
+    { "realName": "戚維凌", "nickname": "七尾鯪魚" }
+  ],
+  "5": [
+    { "realName": "楊博宇", "nickname": "武藤遊條" },
+    { "realName": "郭芷杅", "nickname": "咖啡是一種豆漿嗎" },
+    { "realName": "李杰穎", "nickname": "貝er果乾" },
+    { "realName": "林郁晁", "nickname": "蘿蔔糕炒蛋" },
+    { "realName": "張晉睿", "nickname": "銀龍魚排堡" },
+    { "realName": "林哲全", "nickname": "麥味登dua郎" },
+    { "realName": "古聖聰", "nickname": "大藍鯨" }
+  ],
+  "6": [
+    { "realName": "蔡昀佑", "nickname": "沒那麼煎蛋" },
+    { "realName": "張珮芸", "nickname": "撒庫蛋沙拉" },
+    { "realName": "林彥宇", "nickname": "偷茶葉蛋" },
+    { "realName": "李羿昕", "nickname": "唐昕蛋" },
+    { "realName": "鄭皓予", "nickname": "金蛋銀蛋" },
+    { "realName": "林庭寪", "nickname": "🫲🍑🥚" }
+  ],
+  "7": [
+    { "realName": "李智璿", "nickname": "綠茶的魔手" },
+    { "realName": "葉家蓁", "nickname": "五桐號呆" },
+    { "realName": "江品寬", "nickname": "你可不可以閉嘴" },
+    { "realName": "楊晟弘", "nickname": "我愛coco" },
+    { "realName": "簡佑安", "nickname": "50嵐叫外送" },
+    { "realName": "郭冠德", "nickname": "夕鶴茶樓" }
+  ],
+  "8": [
+    { "realName": "黃冠佾", "nickname": "我愛羅莉" },
+    { "realName": "王皓平", "nickname": "小櫻！真可愛" },
+    { "realName": "曾士珍", "nickname": "鬼吼鬼鮫" },
+    { "realName": "陳箴", "nickname": "小鳴人不住了" },
+    { "realName": "吳容亨", "nickname": "yo~鼬~" },
+    { "realName": "陳泓宇", "nickname": "綱手win了" },
+    { "realName": "丁宇洋", "nickname": "雛田老師的粉筆" }
+  ],
+  "9": [
+    { "realName": "李欣螢", "nickname": "寶包" },
+    { "realName": "邱振源", "nickname": "老ㄉㄟˇ勁" },
+    { "realName": "周廷威", "nickname": "老乾杯" },
+    { "realName": "林書愷", "nickname": "老哥" },
+    { "realName": "陳炤宇", "nickname": "老乾媽" },
+    { "realName": "田松翰", "nickname": "老田寶" },
+    { "realName": "林宇柔", "nickname": "老妹" }
+  ],
+  "10": [
+    { "realName": "楊佳翰", "nickname": "Diego亮死了" },
+    { "realName": "陳璽安", "nickname": "Ann妮亞" },
+    { "realName": "鄭武謙", "nickname": "Redick" },
+    { "realName": "郭宥欣", "nickname": "Assley老師" },
+    { "realName": "邱英紘", "nickname": "Angnals" },
+    { "realName": "詹秉諺", "nickname": "欸低哥" }
+  ]
+};
+
+    function buildTable() {
+      const container = document.getElementById('teams-container');
+      container.innerHTML = '';  // 清空
+
+      Object.entries(teamData).forEach(([teamNum, members]) => {
+        // 創建團隊卡片
+        const teamCard = document.createElement('div');
+        teamCard.className = 'team-card';
+        
+        // 創建團隊標題
+        const teamHeader = document.createElement('div');
+        teamHeader.className = 'team-header';
+        teamHeader.textContent = `${teamNum}小`;
+        teamCard.appendChild(teamHeader);
+        
+        // 創建成員列表容器
+        const teamMembers = document.createElement('div');
+        teamMembers.className = 'team-members';
+        
+        const ul = document.createElement('ul');
+
+        members.forEach(({ realName, nickname }) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          // 點擊打開模態框顯示照片
+          a.href = '#';
+          a.textContent = nickname;
+          a.onclick = (e) => {
+            e.preventDefault();
+            openPhotoModal(realName, nickname);
+          };
+          li.appendChild(a);
+          
+          // 新增複製按鈕
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'copy-btn';
+          copyBtn.textContent = '複製';
+          copyBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            copyToClipboard(nickname);
+          };
+          
+          li.appendChild(copyBtn);
+          ul.appendChild(li);
+        });
+
+        teamMembers.appendChild(ul);
+        teamCard.appendChild(teamMembers);
+        container.appendChild(teamCard);
+      });
+    }
+    
+    // 複製到剪貼簿功能
+    function copyToClipboard(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        // 使用現代的 Clipboard API
+        navigator.clipboard.writeText(text).then(() => {
+          showCopyFeedback();
+        }).catch(err => {
+          console.error('複製失敗:', err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // 使用舊版方法作為備案
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+    
+    // 備案複製方法
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      
+      // 確保元素不可見
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopyFeedback();
+        } else {
+          console.error('複製失敗');
+        }
+      } catch (err) {
+        console.error('複製失敗:', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+    
+    // 顯示複製成功提示
+    function showCopyFeedback() {
+      const feedback = document.getElementById('copy-feedback');
+      feedback.classList.add('show');
+      
+      setTimeout(() => {
+        feedback.classList.remove('show');
+      }, 2000);
+    }
+    
+    // 打開照片模態框
+    function openPhotoModal(realName, nickname) {
+      const modal = document.getElementById('photo-modal');
+      const modalTitle = document.getElementById('modal-title');
+      const modalBody = document.getElementById('modal-body');
+      
+      modalTitle.textContent = `${nickname}`;
+      modalBody.innerHTML = '<div class="modal-loading">載入中...</div>';
+      modal.style.display = 'block';
+      
+      // 載入圖片
+      const img = new Image();
+      const imageUrl = `https://cscamp.nctucsunion.me/images/members/${encodeURIComponent(realName)}.webp`;
+      
+      img.onload = function() {
+        modalBody.innerHTML = '';
+        modalBody.appendChild(img);
+      };
+      
+      img.onerror = function() {
+        modalBody.innerHTML = '<div class="modal-error">無法載入照片</div>';
+      };
+      
+      img.src = imageUrl;
+    }
+    
+    // 關閉模態框
+    function closeModal() {
+      const modal = document.getElementById('photo-modal');
+      modal.style.display = 'none';
+    }
+    
+    // 點擊模態框外部關閉
+    window.onclick = function(event) {
+      const modal = document.getElementById('photo-modal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+    
+    // ESC 鍵關閉模態框
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // 等 DOM 準備好後執行
+    document.addEventListener('DOMContentLoaded', buildTable);
+  </script>
+</body>
+</html>
