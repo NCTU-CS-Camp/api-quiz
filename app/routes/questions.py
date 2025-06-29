@@ -64,7 +64,7 @@ def manage_questions(id):
             # Check if user has already answered this question
             existing = UserAnswer.query.filter_by(user_id=user.id, question_id=id).first()
             if existing:
-                return jsonify({'error': '已經回答過此題，無法重複得分'}), 400
+                return jsonify({'message': '回答正確，但已經回答過此題，無法重複得分'}), 200
             
             # record answer
             record = UserAnswer(user_id=user.id, question_id=id)
