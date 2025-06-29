@@ -21,13 +21,13 @@ def create_user():
         app.logger.warning(f"Registration failed: user {username} already exists")
         return jsonify({'error':'用戶已存在'}), 409
     try:
-        user = User(username=username)
+        user = User(username=username, game_level=1)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
         app.logger.debug(f"User {username} registered successfully")
         socketio.emit('new_user', {'username': username}, namespace='/')
-        return jsonify({'message': '註冊成功'}), 201
+        return jsonify({'message': '註冊成功', 'user': user.to_dict()}), 201
     except IntegrityError:
         db.session.rollback()
         app.logger.error(f"Registration failed for {username} due to an integrity error (race condition).")
@@ -107,3 +107,16 @@ def total_users():
     except Exception as e:
         app.logger.error(f"Failed to count users: {e}")
         return jsonify({'error': '查詢失敗', 'message': str(e)}), 500
+
+@users_bp.route('/login', methods=['POST'])
+def login_user():
+    data = request.get_json() or {}
+    username = data.get('username')
+    password = data.get('password')
+    if not username or not password:
+        return jsonify({'error': '缺少用戶名或密碼'}), 400
+    user = User.query.filter_by(username=username).first()
+    if user and user.check_password(password):
+        return jsonify({'message': '登入成功', 'user': user.to_dict()}), 200
+    else:
+        return jsonify({'error': '用戶名或密碼錯誤'}), 401

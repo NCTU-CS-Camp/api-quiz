@@ -8,11 +8,12 @@ from .logger     import setup_logger
 from .routes.questions import questions_bp
 from .routes.users     import users_bp
 from .routes.api_keys   import api_keys_bp
+from .routes.game      import game_bp
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    CORS(app)
+    CORS(app, supports_credentials=True)
 
     # init extensions
     setup_logger(app)
@@ -53,6 +54,7 @@ def create_app():
     app.register_blueprint(questions_bp)
     app.register_blueprint(users_bp)
     app.register_blueprint(api_keys_bp)
+    app.register_blueprint(game_bp)
     
     # Error Handlers
     @app.errorhandler(RateLimitExceeded)

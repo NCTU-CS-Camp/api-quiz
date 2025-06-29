@@ -7,7 +7,7 @@ class User(db.Model):
     password_hash = db.Column(db.String, nullable=False)
     team          = db.Column(db.Integer, default=0)
     iq            = db.Column(db.Integer, default=90)
-    
+    game_level    = db.Column(db.Integer, default=1)  # 新增遊戲等級欄位
     # add relationship
     answers = db.relationship('UserAnswer', backref='user', cascade='all, delete-orphan')
 
@@ -22,7 +22,8 @@ class User(db.Model):
             'id': self.id,
             'username': self.username,
             'team': self.team,
-            'iq': self.iq
+            'iq': self.iq,
+            'game_level': self.game_level # add game_level to dict
         }
 
 class UserAnswer(db.Model):
