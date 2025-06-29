@@ -25,7 +25,7 @@ def create_app():
     def index():
         return app.send_static_file('index.html')
     
-    @app.route('/favorites')
+    @app.route('/fav')
     def favorites_page():
         return app.send_static_file('favorites.html')
 
