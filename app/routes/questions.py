@@ -8,7 +8,7 @@ questions_bp = Blueprint('questions', __name__, url_prefix='/questions')
 @questions_bp.route('/', methods=['GET'])
 @auth.login_required
 def list_questions():
-    return jsonify({'message': '總共有5個問題，用 /questions/<id> 取得問題內容'}), 200
+    return jsonify({'message': '總共有6個問題，用 /questions/<id> 取得問題內容'}), 200
 
 @questions_bp.route('/<int:id>', methods=['GET', 'POST'])
 @limiter.limit("10 per minute", methods=["POST"], key_func=get_remote_address)
