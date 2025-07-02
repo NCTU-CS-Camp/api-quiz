@@ -57,6 +57,7 @@ if __name__ == "__main__":
         print("無法取得問題，請檢查問題 ID 或是否登入。")
         exit(1)
     print("問題:", question['question'])
+    # http://140.113.168.192:9000/name 查看隊輔名字
     
     answer = input("請輸入你的答案: ")
     result = submit_answer(question_id, answer)
