@@ -17,17 +17,17 @@ def get_api_key():
         return None
     
 # TODO 使用 Gemini 生成答案
-def generate_answer(question):
+def generate_answer(question):          # 在quiz5.py 中已經有這個函式
     full_text = ""
     return full_text
 
 # TODO 取得各問題
-def get_question(question_id):
+def get_question(question_id):          # 在 quiz4.py 中已經有這個函式
     pass
     
     
 # TODO 提交答案
-def submit_answer(question_id, answer):
+def submit_answer(question_id, answer): # 在 quiz4.py 中已經有這個函式
     pass
 
     
