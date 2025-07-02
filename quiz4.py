@@ -14,7 +14,10 @@ def get_questions():
     """
     TODO: 呼叫 /questions，並回傳 JSON 結果
     """
-    response = requests.?????(f"{API_URL}/questions", auth=(USERNAME, PASSWORD)) # <1> HTTP 方法
+    response = requests.?????(                 # <1> HTTP 方法
+        f"{API_URL}/questions",
+        auth=(USERNAME, PASSWORD)
+    )
     if response.status_code == ?????:           # <2> 狀態碼
         print(response.json())
         return response.json()
@@ -27,7 +30,10 @@ def get_question(question_id):
     """
     TODO: 呼叫 /questions/{question_id}，並回傳 JSON 結果
     """
-    response = requests.?????(f"{API_URL}/questions/{question_id}", auth=(USERNAME, PASSWORD)) # <3> HTTP 方法
+    response = requests.?????(                 # <3> HTTP 方法
+        f"{API_URL}/questions/{question_id}",
+        auth=(USERNAME, PASSWORD)
+    )
     if response.status_code == ?????:           # <4> 狀態碼
         return response.json()
     else:
