@@ -22,3 +22,5 @@ test*
 .env
 .venv/
 **/__pycache__/
+
+app/api_keys.json
