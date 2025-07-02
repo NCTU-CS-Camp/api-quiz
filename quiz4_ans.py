@@ -39,7 +39,7 @@ def submit_answer(question_id, answer):
     if response.status_code == 200:
         return response.json()
     else:
-        print(f"error: {response.status_code} - {response.json().get('error', '未知錯誤')}")
+        print(f"error: {response.status_code} - {response.json()['error']}")
         return None
 
     

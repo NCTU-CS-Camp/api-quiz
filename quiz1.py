@@ -35,6 +35,7 @@ def get_my_account():
     if resp.status_code == 200:
         return resp.json()
     else:
+        print(f"error: {response.status_code} - {response.json()['error']}")
         return None
 
 
