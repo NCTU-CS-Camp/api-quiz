@@ -26,7 +26,9 @@ def generate_content():
     print("正在使用 Google Gemini 生成內容...")
     url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
-    question = ?????     # <1> 問題內容
+    question = """
+    (在這裡輸入問題內容)
+    """                 # <1> 問題內容
 
     payload = {
         "contents": [
