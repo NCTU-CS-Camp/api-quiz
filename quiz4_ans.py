@@ -16,6 +16,7 @@ def get_questions():
         print(response.json())
         return response.json()
     else:
+        print(f"error: {response.status_code} - {response.json()['error']}")
         return None
 
 # 任務二 使用 GET 方法取得各問題
@@ -24,6 +25,7 @@ def get_question(question_id):
     if response.status_code == 200:
         return response.json()
     else:
+        print(f"error: {response.status_code} - {response.json()['error']}")
         return None
     
     

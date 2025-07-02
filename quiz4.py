@@ -19,6 +19,7 @@ def get_questions():
         print(response.json())
         return response.json()
     else:
+        print(f"error: {response.status_code} - {response.json()['error']}")
         return None
 
 # TODO 取得各問題
@@ -30,6 +31,7 @@ def get_question(question_id):
     if response.status_code == ?????:           # <4> 狀態碼
         return response.json()
     else:
+        print(f"error: {response.status_code} - {response.json()['error']}")
         return None
     
     
