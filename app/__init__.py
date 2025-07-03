@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from flask_limiter.errors import RateLimitExceeded
+# from flask_limiter.errors import RateLimitExceeded
 from .config     import Config
-from .extensions import db, auth, socketio, limiter
+from .extensions import db, auth, socketio
 import app.auth # 初始化 auth 
 from .logger     import setup_logger
 from .routes.questions import questions_bp
@@ -19,7 +19,7 @@ def create_app():
     setup_logger(app)
     db.init_app(app)
     socketio.init_app(app)
-    limiter.init_app(app)
+    # limiter.init_app(app)
     
     # 當用戶訪問 '/'，直接回傳 static/index.html
     @app.route('/')
@@ -56,13 +56,13 @@ def create_app():
     app.register_blueprint(api_keys_bp)
     app.register_blueprint(game_bp)
     
-    # Error Handlers
-    @app.errorhandler(RateLimitExceeded)
-    def handle_rate_limit(e):
-        return jsonify({
-            'error': '請求過於頻繁',
-            'message': f'不要一直戳API啦，再戳我就去戳你 ({e.description})'
-        }), 429
+    # # Error Handlers
+    # @app.errorhandler(RateLimitExceeded)
+    # def handle_rate_limit(e):
+    #     return jsonify({
+    #         'error': '請求過於頻繁',
+    #         'message': f'不要一直戳API啦，再戳我就去戳你 ({e.description})'
+    #     }), 429
     
     @app.errorhandler(400)
     def bad_request(error):

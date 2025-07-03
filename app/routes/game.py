@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app as app
-from ..extensions import auth, db, limiter
+from ..extensions import auth, db
 from ..models import User  # 移除 AIConversation
-from flask_limiter.util import get_remote_address
+# from flask_limiter.util import get_remote_address
 import json
 import os
 import requests
@@ -47,7 +47,7 @@ def get_gemini_response(user_input, system_prompt, api_key):
 
 
 @game_bp.route('/level/<int:level_num>', methods=['POST'])
-@limiter.limit("20 per minute", key_func=get_remote_address)
+# @limiter.limit("20 per minute", key_func=get_remote_address)
 @auth.login_required
 def chat_with_ai_level(level_num):
     """直接回傳 output prompt，不做升級判斷。"""

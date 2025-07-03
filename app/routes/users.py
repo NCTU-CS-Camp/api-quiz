@@ -1,13 +1,13 @@
 from flask import Blueprint, jsonify, request, current_app as app
-from ..extensions import auth, db, socketio, limiter
+from ..extensions import auth, db, socketio
 from ..models import User
 from sqlalchemy.exc import IntegrityError
-from flask_limiter.util import get_remote_address
+#from flask_limiter.util import get_remote_address
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 @users_bp.route('/', methods=['POST'])
-@limiter.limit("10 per minute", key_func=get_remote_address)
+# @limiter.limit("10 per minute", key_func=get_remote_address)
 def create_user():
     data = request.get_json() or {}
     username = data.get('username'); password = data.get('password')
@@ -38,7 +38,7 @@ def create_user():
         return jsonify({'error': '註冊失敗', 'message': str(e)}), 500
 
 @users_bp.route('/me', methods=['GET','PATCH','DELETE'])
-@limiter.limit("20 per minute", methods=["PATCH", "DELETE"], key_func=get_remote_address)
+# @limiter.limit("20 per minute", methods=["PATCH", "DELETE"], key_func=get_remote_address)
 @auth.login_required
 def manage_current_user():
     user = auth.current_user()
