@@ -21,6 +21,7 @@
 
     async function updateChart() {
       const data = await fetchStats();
+      data.sort((a, b) => b.count - a.count);
       const labels = data.map(item => item.name);
       const counts = data.map(item => item.count);
 
